@@ -1,6 +1,6 @@
 import os
 import json
-import google as genai
+from google import genai
 from openai import OpenAI
 from dotenv import load_dotenv
 import warnings
@@ -20,9 +20,9 @@ def run_openai(user_message: str) -> str:
   response = client.chat.completions.create(
       model = CONFIG["openai"]["model"],
       messages = user_message,
-      max_tokens = CONFIG["openai"].get(["max_tokens"], 200),
-      temperature = CONFIG["openai"].get(["temperature"], 0.7),
-      top_p = CONFIG["openai"].get(["top_p"], 0.9)
+      max_tokens = CONFIG["openai"].get("max_tokens", 200),
+      temperature = CONFIG["openai"].get("temperature", 0.7),
+      top_p = CONFIG["openai"].get("top_p", 0.9)
   )
   return response.choices[0].message.content.strip()
 
@@ -37,10 +37,12 @@ def run_gemini(user_message: str) -> str:
   response = client.models.generate_content(
       model=CONFIG["gemini"]["model"],
       contents=user_message,
-      generation_config={
+      config={
         "temperature": CONFIG["gemini"].get("temperature", 0.7),
         "top_p": CONFIG["gemini"].get("top_p", 0.9),
-        "max_output_tokens": CONFIG["gemini"].get("max_output_tokens", 200)
+        "max_output_tokens": CONFIG["gemini"].get(
+            "max_output_tokens", CONFIG["gemini"].get("max_tokens", 200)
+        )
       }
   )
   return response.text.strip()
