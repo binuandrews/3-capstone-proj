@@ -21,6 +21,15 @@ if "history" not in st.session_state:
 for msg in st.session_state["history"]:
   st.chat_message(msg["role"]).markdown(msg["content"])
 
+if st.button("Reset Conversation ۞"):
+  st.session_state["history"] = [
+    {
+      "role": "assistant",
+      "content": "Hello! I'm your AI assistant. How can I help you today?"
+    }
+  ]
+  st.rerun()
+
 # User Input
 if prompt := st.chat_input("Type the message here..."):
   st.session_state["history"].append(
@@ -40,13 +49,4 @@ if prompt := st.chat_input("Type the message here..."):
       }
   )
 
-  st.chat_message("assistnat").markdown(reply)
-
-  if(st.button("Reset Conversation ۞")):
-    st.session_state["history"] = [
-      {
-        "role": "assistant",
-        "content": "Hello! I'm your AI assistant. How can I help you today?"
-      }
-    ]
-    st.rerun
+  st.chat_message("assistant").markdown(reply)
